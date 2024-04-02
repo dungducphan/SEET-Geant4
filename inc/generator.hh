@@ -12,16 +12,20 @@
 #include "G4AnalysisManager.hh"
 #include "G4String.hh"
 
+#include <cstdlib>
+#include <ctime>
+
 #include "TMath.h"
 
 class generator : public G4VUserPrimaryGeneratorAction {
 public:
     generator();
-
     ~generator() override;
-
     void GeneratePrimaries(G4Event *anEvent) override;
 
 private:
     G4GeneralParticleSource *fGeneralParticleSource = nullptr;
+
+    static G4ThreeVector RandomizedPosition();
+    static G4ThreeVector RandomizedDirection();
 };
