@@ -24,7 +24,7 @@ class G4Step;
 
 class SEET_SD : public G4VSensitiveDetector {
 public:
-    SEET_SD(const G4String& name);
-    virtual ~SEET_SD();
-    virtual G4bool  ProcessHits(G4Step*, G4TouchableHistory*);
+    explicit SEET_SD(const G4String& name);
+    ~SEET_SD() override;
+    G4bool  ProcessHits(G4Step*, G4TouchableHistory*) override;
 };

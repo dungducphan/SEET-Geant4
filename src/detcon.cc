@@ -70,6 +70,6 @@ G4VPhysicalVolume *detcon::Construct() {
 void detcon::ConstructSDandField() {
     auto aSD = new SEET_SD("SEET-SD");
     G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
-    SetSensitiveDetector(logic_VDFront, aSD);
+    // SetSensitiveDetector(logic_VDFront, aSD);
     SetSensitiveDetector(logic_VDBack, aSD);
 }
