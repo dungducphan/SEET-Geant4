@@ -2,15 +2,15 @@
 // Created by dphan on 2/22/23.
 //
 
-#include <nTOF_SD.hh>
+#include <SEET_SD.hh>
 #include <G4SystemOfUnits.hh>
 #include <TString.h>
 
-nTOF_SD::nTOF_SD(const G4String &name) : G4VSensitiveDetector(name) {}
+SEET_SD::SEET_SD(const G4String &name) : G4VSensitiveDetector(name) {}
 
-nTOF_SD::~nTOF_SD() noexcept {}
+SEET_SD::~SEET_SD() noexcept {}
 
-G4bool nTOF_SD::ProcessHits(G4Step * aStep, G4TouchableHistory *) {
+G4bool SEET_SD::ProcessHits(G4Step * aStep, G4TouchableHistory *) {
 
     G4double edep = aStep->GetTotalEnergyDeposit();
     G4double tof = aStep->GetPreStepPoint()->GetGlobalTime();

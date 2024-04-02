@@ -32,12 +32,12 @@ class detcon : public G4VUserDetectorConstruction {
 public:
     detcon();
 
-    virtual ~detcon();
+    ~detcon() override;
 
-    virtual G4VPhysicalVolume *Construct();
-    virtual void ConstructSDandField();
+    G4VPhysicalVolume *Construct() override;
+    void ConstructSDandField() override;
 
-    std::vector<G4LogicalVolume*> logic_nTOFs;
-    std::vector<G4LogicalVolume*> logic_nBDs;
-    G4LogicalVolume *logic_radShield;
+    G4LogicalVolume* logic_VDFront{};
+    G4LogicalVolume* logic_VDBack{};
+    G4LogicalVolume *logic_PinholeBlock{};
 };

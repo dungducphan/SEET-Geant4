@@ -22,9 +22,9 @@
 
 class G4Step;
 
-class nTOF_SD : public G4VSensitiveDetector {
+class SEET_SD : public G4VSensitiveDetector {
 public:
-    nTOF_SD(const G4String& name);
-    virtual ~nTOF_SD();
+    SEET_SD(const G4String& name);
+    virtual ~SEET_SD();
     virtual G4bool  ProcessHits(G4Step*, G4TouchableHistory*);
 };
