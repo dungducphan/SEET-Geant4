@@ -57,7 +57,7 @@ void SEETAna() {
             hPositronSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         } else if (PDGID == 22) {
             hGammaSpectrum->Fill(E);
-            hGammaSpectrumWavelength->Fill(1239.842 / (E * 1000));
+            hGammaSpectrumWavelength->Fill(1239.842 / (E * 1E6));
             hGammaSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         }
     }
