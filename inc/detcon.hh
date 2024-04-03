@@ -37,7 +37,6 @@ public:
     G4VPhysicalVolume *Construct() override;
     void ConstructSDandField() override;
 
-    G4LogicalVolume* logic_VDFront{};
     G4LogicalVolume* logic_VDBack{};
     G4LogicalVolume *logic_PinholeBlock{};
 };

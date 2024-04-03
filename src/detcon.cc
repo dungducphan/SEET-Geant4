@@ -12,7 +12,6 @@
 detcon::detcon() : G4VUserDetectorConstruction() {}
 
 detcon::~detcon() {
-    delete logic_VDFront;
     delete logic_VDBack;
     delete logic_PinholeBlock;
 }
@@ -25,9 +24,11 @@ G4VPhysicalVolume *detcon::Construct() {
     auto stlPath = getenv("STL_DIR");
 
     // World
-    G4double worldSize = 10 * cm;
+    G4double worldSize_X = 10 * cm;
+    G4double worldSize_Y = 300 * cm;
+    G4double worldSize_Z = 10 * cm;
     G4Material *worldMat = nist->FindOrBuildMaterial("G4_Galactic");
-    auto solidWorld = new G4Box("solidWorld", 0.5 * worldSize, 0.5 * worldSize, 0.5 * worldSize);
+    auto solidWorld = new G4Box("solidWorld", 0.5 * worldSize_X, 0.5 * worldSize_Y, 0.5 * worldSize_Z);
     auto logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicWorld");
     G4VPhysicalVolume *physWorld = new G4PVPlacement(nullptr, G4ThreeVector(), logicWorld, "physWorld", nullptr, false, 0, checkOverlaps);
 
@@ -42,26 +43,15 @@ G4VPhysicalVolume *detcon::Construct() {
     va_PinholeBlock->SetColor(0, 1, 0, 0.5);
     logic_PinholeBlock->SetVisAttributes(va_PinholeBlock);
 
-    // Virtual Detector Front
-    auto mesh_VDFront = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-VirtualDetectorFront.stl", stlPath));
-    G4VSolid *solid_VDFront = mesh_VDFront->GetSolid();
-    logic_VDFront = new G4LogicalVolume(solid_VDFront, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDFront");
-    // G4VPhysicalVolume *phys_VDFront = new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), logic_VDFront, "phys_VDFront", logicWorld, false, 0, checkOverlaps);
-    auto va_VDFront = new G4VisAttributes();
-    va_VDFront->SetVisibility();
-    va_VDFront->SetForceSolid();
-    va_VDFront->SetColor(1, 0, 0, 0.5);
-    logic_VDFront->SetVisAttributes(va_VDFront);
-
     // Virtual Detector Back
     auto mesh_VDBack = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-PhotoDiode-VD.stl", stlPath));
     G4VSolid *solid_VDBack = mesh_VDBack->GetSolid();
     logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDBack");
-    G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
+    G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(nullptr, G4ThreeVector(0, 11 * mm, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
     auto va_VDBack = new G4VisAttributes();
     va_VDBack->SetVisibility();
     va_VDBack->SetForceSolid();
-    va_VDBack->SetColor(0, 0, 1, 0.5);
+    va_VDBack->SetColor(1, 0, 0, 0.5);
     logic_VDBack->SetVisAttributes(va_VDBack);
 
     return physWorld;
@@ -70,6 +60,5 @@ G4VPhysicalVolume *detcon::Construct() {
 void detcon::ConstructSDandField() {
     auto aSD = new SEET_SD("SEET-SD");
     G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
-    // SetSensitiveDetector(logic_VDFront, aSD);
     SetSensitiveDetector(logic_VDBack, aSD);
 }

@@ -37,7 +37,7 @@ G4ThreeVector generator::RandomizedPosition() {
     G4double x = r * TMath::Sin(theta) * 10. * um;
     G4double z = r * TMath::Cos(theta) * 10. * um;
 
-    return {x, 4 * cm, z};
+    return {x, 145 * cm, z};
 }
 
 G4ThreeVector generator::RandomizedDirection() {
