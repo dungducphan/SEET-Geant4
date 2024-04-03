@@ -2,3 +2,4 @@
 cmake-build-*/
 archive
 *.FCStd1
+*.root
