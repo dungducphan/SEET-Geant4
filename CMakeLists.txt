@@ -26,3 +26,5 @@ include_directories(${PROJECT_SOURCE_DIR}/inc)
 add_executable(SEET sim.cc ${sources} ${headers})
 target_link_libraries(SEET ${Geant4_LIBRARIES})
 target_link_libraries(SEET ${ROOT_LIBRARIES})
+
+add_subdirectory(ana)
