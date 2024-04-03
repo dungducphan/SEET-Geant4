@@ -13,7 +13,7 @@
 
 // Change these:
 std::string anaDirPath = "/home/dphan/Documents/GitHub/SEET-Geant4/ana";
-std::string dataFile = "Ana_RunID_001";
+std::string dataFile = "Ana";
 
 void SEETAna() {
     gStyle->SetOptStat(0);

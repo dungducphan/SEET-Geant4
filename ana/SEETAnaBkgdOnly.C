@@ -13,7 +13,7 @@
 
 // Change these:
 std::string anaDirPath = "/home/dphan/Documents/GitHub/SEET-Geant4/ana";
-std::string dataFile = "Ana_RunID_001";
+std::string dataFile = "Ana";
 
 void SEETAna() {
     gStyle->SetOptStat(0);
@@ -24,11 +24,14 @@ void SEETAna() {
     auto NEntries = tree->GetEntries();
 
     // Prepare the histograms
-    auto hElectronSpectrum = new TH1D("hElectronSpectrum", ";E (MeV);dN/dE (/0.5 MeV)", 100, 0, 50);
-    auto hPositronSpectrum = new TH1D("hPositronSpectrum", ";E (Mev);dN/dE (/0.5 MeV)", 100, 0, 50);
-    auto hGammaSpectrum    = new TH1D("hGammaSpectrum",    ";E (MeV);dN/dE (/0.5 MeV)", 100, 0, 50);
+    auto hElectronSpectrum          = new TH1D("hElectronSpectrum",       ";E (MeV);dN/dE (/0.5 MeV)",  100, 0, 50);
+    auto hPositronSpectrum          = new TH1D("hPositronSpectrum",       ";E (Mev);dN/dE (/0.5 MeV)",  100, 0, 50);
+    auto hGammaSpectrum             = new TH1D("hGammaSpectrum",          ";E (MeV);dN/dE (/0.5 MeV)",  100, 0, 50);
+    auto hGammaSpectrumWavelength   = new TH1D("hGammaSpectrumWavelength",";#lambda (nm); dN/d#lambda (/0.1 nm)", 200, 0, 20);
 
     auto hElectronSpectrumVersusPosition = new TH2D("hElectronSpectrumVersusPosition", ";E (MeV); R (micron)", 100, 0, 50, 127, 0, 508);
+    auto hPositronSpectrumVersusPosition = new TH2D("hPositronSpectrumVersusPosition", ";E (MeV); R (micron)", 100, 0, 50, 127, 0, 508);
+    auto hGammaSpectrumVersusPosition    = new TH2D("hGammaSpectrumVersusPosition",    ";E (MeV); R (micron)", 100, 0, 50, 127, 0, 508);
 
     // Loop over the tree here
     int EventID, TrackID, PDGID;
@@ -48,12 +51,14 @@ void SEETAna() {
         if (TrackID == 1) continue;
         if (PDGID == 11) {
             hElectronSpectrum->Fill(E);
-            double R = TMath::Sqrt(x * x + z * z);
-            if (R <= 507) hElectronSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
+            hElectronSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         } else if (PDGID == -11) {
             hPositronSpectrum->Fill(E);
+            hPositronSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         } else if (PDGID == 22) {
             hGammaSpectrum->Fill(E);
+            hGammaSpectrumWavelength->Fill(1239.842 / (E * 1000));
+            hGammaSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         }
     }
 
@@ -90,6 +95,17 @@ void SEETAna() {
 
     canvas->SaveAs(Form("%s/BackgroundOnly/SEETAna-Spectra.pdf", anaDirPath.c_str()));
 
+    hGammaSpectrumWavelength->SetFillColorAlpha(kGreen, 0.1);
+    hGammaSpectrumWavelength->SetLineWidth(2);
+    auto spectrumWavelength = new TCanvas("c1", "c1", 1200, 1200);
+    spectrumWavelength->SetLogy();
+    hGammaSpectrumWavelength->Draw();
+    hGammaSpectrumWavelength->GetXaxis()->CenterTitle();
+    hGammaSpectrumWavelength->GetYaxis()->CenterTitle();
+    hGammaSpectrumWavelength->GetYaxis()->SetRangeUser(1, 1e5);
+    hGammaSpectrumWavelength->GetYaxis()->SetMaxDigits(3);
+    spectrumWavelength->SaveAs(Form("%s/BackgroundOnly/SEETAna-SpectraWavelength.pdf", anaDirPath.c_str()));
+
     auto canvas2 = new TCanvas("c2", "c2", 1200, 1200);
     canvas2->SetMargin(0.15, 0.15, 0.15, 0.15);
     hElectronSpectrumVersusPosition->Draw("COLZ");
@@ -98,6 +114,7 @@ void SEETAna() {
     canvas2->SaveAs(Form("%s/BackgroundOnly/SEETAna-SpectraVersusPosition.pdf", anaDirPath.c_str()));
 
     delete canvas;
+    delete spectrumWavelength;
     delete canvas2;
     delete hElectronSpectrum;
     delete hPositronSpectrum;
