@@ -46,7 +46,7 @@ G4VPhysicalVolume *detcon::Construct() {
     auto mesh_VDFront = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-VirtualDetectorFront.stl", stlPath));
     G4VSolid *solid_VDFront = mesh_VDFront->GetSolid();
     logic_VDFront = new G4LogicalVolume(solid_VDFront, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDFront");
-    G4VPhysicalVolume *phys_VDFront = new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), logic_VDFront, "phys_VDFront", logicWorld, false, 0, checkOverlaps);
+    // G4VPhysicalVolume *phys_VDFront = new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), logic_VDFront, "phys_VDFront", logicWorld, false, 0, checkOverlaps);
     auto va_VDFront = new G4VisAttributes();
     va_VDFront->SetVisibility();
     va_VDFront->SetForceSolid();
@@ -54,7 +54,7 @@ G4VPhysicalVolume *detcon::Construct() {
     logic_VDFront->SetVisAttributes(va_VDFront);
 
     // Virtual Detector Back
-    auto mesh_VDBack = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-VirtualDetectorBack.stl", stlPath));
+    auto mesh_VDBack = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-PhotoDiode-VD.stl", stlPath));
     G4VSolid *solid_VDBack = mesh_VDBack->GetSolid();
     logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDBack");
     G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(nullptr, G4ThreeVector(0, 0, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
