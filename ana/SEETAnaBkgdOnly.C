@@ -13,7 +13,8 @@
 
 // Change these:
 std::string anaDirPath = "/home/dphan/Documents/GitHub/SEET-Geant4/ana";
-std::string dataFile = "Ana_1cm_1E8";
+std::string dataFile = "Ana_5cm_1E7";
+std::string thickness = "W5cm";
 
 void SEETAna() {
     gStyle->SetOptStat(0);
@@ -104,28 +105,28 @@ void SEETAna() {
     hGammaSpectrumWavelength->GetYaxis()->CenterTitle();
     hGammaSpectrumWavelength->GetYaxis()->SetRangeUser(1, 1e5);
     hGammaSpectrumWavelength->GetYaxis()->SetMaxDigits(3);
-    spectrumWavelength->SaveAs(Form("%s/BackgroundOnly/SEETAna-SpectraWavelength.pdf", anaDirPath.c_str()));
+    spectrumWavelength->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-SpectraWavelength.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     auto canvas2 = new TCanvas("c2", "c2", 1200, 1200);
     canvas2->SetMargin(0.15, 0.15, 0.15, 0.15);
     hElectronSpectrumVersusPosition->Draw("COLZ");
     hElectronSpectrumVersusPosition->GetXaxis()->CenterTitle();
     hElectronSpectrumVersusPosition->GetYaxis()->CenterTitle();
-    canvas2->SaveAs(Form("%s/BackgroundOnly/SEETAna-ElectronSpectraVersusPosition.pdf", anaDirPath.c_str()));
+    canvas2->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-ElectronSpectraVersusPosition.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     auto canvas3 = new TCanvas("c3", "c3", 1200, 1200);
     canvas3->SetMargin(0.15, 0.15, 0.15, 0.15);
     hPositronSpectrumVersusPosition->Draw("COLZ");
     hPositronSpectrumVersusPosition->GetXaxis()->CenterTitle();
     hPositronSpectrumVersusPosition->GetYaxis()->CenterTitle();
-    canvas3->SaveAs(Form("%s/BackgroundOnly/SEETAna-PositronSpectraVersusPosition.pdf", anaDirPath.c_str()));
+    canvas3->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-PositronSpectraVersusPosition.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     auto canvas4 = new TCanvas("c4", "c4", 1200, 1200);
     canvas4->SetMargin(0.15, 0.15, 0.15, 0.15);
     hGammaSpectrumVersusPosition->Draw("COLZ");
     hGammaSpectrumVersusPosition->GetXaxis()->CenterTitle();
     hGammaSpectrumVersusPosition->GetYaxis()->CenterTitle();
-    canvas4->SaveAs(Form("%s/BackgroundOnly/SEETAna-GammaSpectraVersusPosition.pdf", anaDirPath.c_str()));
+    canvas4->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-GammaSpectraVersusPosition.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     delete canvas;
     delete spectrumWavelength;
@@ -208,7 +209,7 @@ void SEETAna_Log() {
     leg->AddEntry(hPositronSpectrum, Form("Positron (%g)", NPositron), "f");
     leg->AddEntry(hGammaSpectrum, Form("Gamma (%g)", NGamma), "f");
     leg->Draw();
-    canvas->SaveAs(Form("%s/BackgroundOnly/SEETAna-Spectra-Log.pdf", anaDirPath.c_str()));
+    canvas->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-Spectra-Log.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     delete canvas;
     delete hElectronSpectrum;
