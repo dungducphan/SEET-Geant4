@@ -8,6 +8,7 @@
 #include <G4Electron.hh>
 #include <G4Positron.hh>
 #include <G4Gamma.hh>
+#include <G4SystemOfUnits.hh>
 
 steppingAction::steppingAction() = default;
 
@@ -20,19 +21,35 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
 
     if (volume->GetName() != "phys_VDBack") return;
     if (track->GetParticleDefinition() != G4Electron::Definition() && track->GetParticleDefinition() != G4Positron::Definition() && track->GetParticleDefinition() != G4Gamma::Definition()) return;
+    auto energyDeposition = step->GetTotalEnergyDeposit() / keV;
 
-    auto energyDeposition = step->GetTotalEnergyDeposit();
-    if (track->GetParticleDefinition() == G4Electron::Definition()) {
+    // Initialize the primary vectors
+    auto logicalVolNameAtVertex = track->GetLogicalVolumeAtVertex()->GetName();
+    if (logicalVolNameAtVertex != "logic_PhotoDiode") {
         if (track->GetTrackID() == 1) {
-            evtAction->AddSignalEnergyDeposit(energyDeposition);
+            evtAction->AddSignalTracks(track->GetTrackID());
         } else {
-            evtAction->AddElectronBackgroundEnergyDeposit(energyDeposition);
+            evtAction->AddBkgdTracks(track->GetTrackID());
         }
+    }
+
+    // Find out what primary vector this step/track belongs to
+    bool isSignal = evtAction->IsSignalTrack(track->GetTrackID());
+
+    // Add secondaries if any
+    auto secondaries = step->GetSecondaryInCurrentStep();
+    for (auto secondary : *secondaries) {
+        if (isSignal) {
+            evtAction->AddSignalTracks(secondary->GetTrackID());
+        } else {
+            evtAction->AddBkgdTracks(secondary->GetTrackID());
+        }
+    }
+
+    // Add energy deposition
+    if (isSignal) {
+        evtAction->AddSignalEnergyDeposit(energyDeposition);
     } else {
-        if (track->GetParticleDefinition() == G4Gamma::Definition()) {
-            evtAction->AddGammaBackgroundEnergyDeposit(energyDeposition);
-        } else {
-            evtAction->AddPositronBackgroundEnergyDeposit(energyDeposition);
-        }
+        evtAction->AddBackgroundEnergyDeposit(energyDeposition);
     }
 }

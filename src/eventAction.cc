@@ -3,17 +3,15 @@
 eventAction::eventAction() :
 G4UserEventAction(),
 fSignalEnergyDeposit(0),
-fElectronBackgroundEnergyDeposit(0),
-fPositronBackgroundEnergyDeposit(0),
-fGammaBackgroundEnergyDeposit(0) {}
+fBackgroundEnergyDeposit(0) {}
 
 eventAction::~eventAction() = default;
 
 void eventAction::BeginOfEventAction(const G4Event *evt) {
     fSignalEnergyDeposit = 0;
-    fElectronBackgroundEnergyDeposit = 0;
-    fPositronBackgroundEnergyDeposit = 0;
-    fGammaBackgroundEnergyDeposit = 0;
+    fBackgroundEnergyDeposit = 0;
+    fSignalTracks.clear();
+    fBkgdTracks.clear();
 }
 
 void eventAction::EndOfEventAction(const G4Event *evt) {
@@ -21,8 +19,6 @@ void eventAction::EndOfEventAction(const G4Event *evt) {
     G4AnalysisManager *man = G4AnalysisManager::Instance();
     man->FillNtupleIColumn(0, eventID);
     man->FillNtupleDColumn(1, fSignalEnergyDeposit);
-    man->FillNtupleDColumn(2, fElectronBackgroundEnergyDeposit);
-    man->FillNtupleDColumn(3, fPositronBackgroundEnergyDeposit);
-    man->FillNtupleDColumn(4, fGammaBackgroundEnergyDeposit);
+    man->FillNtupleDColumn(2, fBackgroundEnergyDeposit);
     man->AddNtupleRow(0);
 }

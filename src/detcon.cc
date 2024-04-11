@@ -12,7 +12,7 @@
 detcon::detcon() : G4VUserDetectorConstruction() {}
 
 detcon::~detcon() {
-    delete logic_VDBack;
+    delete logic_PhotoDiode;
     delete logic_PinholeBlock;
 }
 
@@ -35,7 +35,7 @@ G4VPhysicalVolume *detcon::Construct() {
     auto a = new G4RotationMatrix();
     a->rotateX(90 * deg);
 
-    auto solid_PinholeBlock = new G4Tubs("solid_VDBack", 50 * um, 30 * mm, 50 * mm, 0, 360 * deg);
+    auto solid_PinholeBlock = new G4Tubs("solid_PinholeBlock", 50 * um, 30 * mm, 50 * mm, 0, 360 * deg);
     logic_PinholeBlock = new G4LogicalVolume(solid_PinholeBlock, nist->FindOrBuildMaterial("G4_W"), "logic_PinholeBlock");
     G4VPhysicalVolume *phys_PinholeBlock = new G4PVPlacement(a, G4ThreeVector(0, 40, 0), logic_PinholeBlock, "phys_PinholeBlock", logicWorld, false, 0, checkOverlaps);
     auto va_PinholeBlock = new G4VisAttributes();
@@ -45,20 +45,17 @@ G4VPhysicalVolume *detcon::Construct() {
     logic_PinholeBlock->SetVisAttributes(va_PinholeBlock);
 
     // Virtual Detector Back
-    auto solid_VDBack = new G4Tubs("solid_VDBack", 0, 0.508 * mm, 0.1 * mm, 0, 360 * deg);
-    logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Si"), "logic_VDBack");
-    G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(a, G4ThreeVector(0, -11 * mm, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
-    auto va_VDBack = new G4VisAttributes();
-    va_VDBack->SetVisibility();
-    va_VDBack->SetForceSolid();
-    va_VDBack->SetColor(1, 0, 0, 0.5);
-    logic_VDBack->SetVisAttributes(va_VDBack);
+    auto solid_PhotoDiode = new G4Tubs("solid_PhotoDiode", 0, 0.508 * mm, 0.1 * mm, 0, 360 * deg);
+    logic_PhotoDiode = new G4LogicalVolume(solid_PhotoDiode, nist->FindOrBuildMaterial("G4_Si"), "logic_PhotoDiode");
+    G4VPhysicalVolume *phys_PhotoDiode = new G4PVPlacement(a, G4ThreeVector(0, -11 * mm, 0), logic_PhotoDiode, "phys_PhotoDiode", logicWorld, false, 0, checkOverlaps);
+    auto va_PhotoDiode = new G4VisAttributes();
+    va_PhotoDiode->SetVisibility();
+    va_PhotoDiode->SetForceSolid();
+    va_PhotoDiode->SetColor(1, 0, 0, 0.5);
+    logic_PhotoDiode->SetVisAttributes(va_PhotoDiode);
 
     return physWorld;
 }
 
 void detcon::ConstructSDandField() {
-//    auto aSD = new SEET_SD("SEET-SD");
-//    G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
-//    SetSensitiveDetector(logic_VDBack, aSD);
 }

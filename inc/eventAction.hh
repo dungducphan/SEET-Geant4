@@ -12,14 +12,16 @@ public:
     void EndOfEventAction(const G4Event*) override;
 
     void AddSignalEnergyDeposit(G4double energyDep) { fSignalEnergyDeposit += energyDep; }
-    void AddElectronBackgroundEnergyDeposit(G4double energyDep) { fElectronBackgroundEnergyDeposit += energyDep; }
-    void AddPositronBackgroundEnergyDeposit(G4double energyDep) { fPositronBackgroundEnergyDeposit += energyDep; }
-    void AddGammaBackgroundEnergyDeposit(G4double energyDep) { fGammaBackgroundEnergyDeposit += energyDep; }
+    void AddBackgroundEnergyDeposit(G4double energyDep) { fBackgroundEnergyDeposit += energyDep; }
+
+    void AddSignalTracks(G4int trackID) { fSignalTracks.push_back(trackID); }
+    void AddBkgdTracks(G4int trackID) { fBkgdTracks.push_back(trackID); }
+    bool IsSignalTrack(G4int trackID) { return std::find(fSignalTracks.begin(), fSignalTracks.end(), trackID) != fSignalTracks.end(); }
 
 private:
     G4double fSignalEnergyDeposit;
-    G4double fElectronBackgroundEnergyDeposit;
-    G4double fPositronBackgroundEnergyDeposit;
-    G4double fGammaBackgroundEnergyDeposit;
+    G4double fBackgroundEnergyDeposit;
+    std::vector<G4int> fSignalTracks;
+    std::vector<G4int> fBkgdTracks;
 };
 

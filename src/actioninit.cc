@@ -1,4 +1,4 @@
-#include "actioninit.hh"
+#include <actioninit.hh>
 
 actioninit::actioninit() : G4VUserActionInitialization() {}
 
@@ -10,5 +10,7 @@ void actioninit::BuildForMaster() const {
 
 void actioninit::Build() const {
     SetUserAction(new runAction());
+    SetUserAction(new eventAction());
+    SetUserAction(new steppingAction());
     SetUserAction(new generator());
 }
