@@ -9,7 +9,13 @@
 #include <TROOT.h>
 #include <TStyle.h>
 #include <TLegend.h>
+
+#include <iostream>
 #endif
+
+double Emax = 600;
+double Emin = 0;
+int Nbins = 120;
 
 void SNRatio() {
     auto infile = new TFile("/home/dphan/Documents/GitHub/SEET-Geant4/ana/SNRatio_96E5_1cm.root", "READ");
@@ -36,10 +42,10 @@ void SNRatio() {
 
     infile->Close();
 
-    auto hist_SignalEdep = new TH1D("hist_SignalEdep", ";Signal Energy Deposit (keV);dN/dE", 200, 0, 1000);
-    auto hist_BackgroundBkgdEdep = new TH1D("hist_BackgroundBkgdEdep", ";Background Energy Deposit (keV);dN/dE", 200, 0, 1000);
-    auto hist_ElectronPositronBackgroundBkgdEdep = new TH1D("hist_ElectronPositronBackgroundBkgdEdep", ";Electron/Positron Background Energy Deposit (keV);dN/dE", 200, 0, 1000);
-    auto hist_GammaBackgroundBkgdEdep = new TH1D("hist_GammaBackgroundBkgdEdep", ";Gamma Background Energy Deposit (keV);dN/dE", 200, 0, 1000);
+    auto hist_SignalEdep = new TH1D("hist_SignalEdep", ";Signal Energy Deposit (keV);dN/dE", Nbins, Emin, Emax);
+    auto hist_BackgroundBkgdEdep = new TH1D("hist_BackgroundBkgdEdep", ";Background Energy Deposit (keV);dN/dE", Nbins, Emin, Emax);
+    auto hist_ElectronPositronBackgroundBkgdEdep = new TH1D("hist_ElectronPositronBackgroundBkgdEdep", ";Electron/Positron Background Energy Deposit (keV);dN/dE", Nbins, Emin, Emax);
+    auto hist_GammaBackgroundBkgdEdep = new TH1D("hist_GammaBackgroundBkgdEdep", ";Gamma Background Energy Deposit (keV);dN/dE", Nbins, Emin, Emax);
     for (auto i = 0; i < NEntries; i++) {
         if (SignalEdepVec[i] != 0) hist_SignalEdep->Fill(SignalEdepVec[i]);
         if (BackgroundBkgdEdepVec[i] != 0) hist_BackgroundBkgdEdep->Fill(BackgroundBkgdEdepVec[i]);
@@ -48,29 +54,30 @@ void SNRatio() {
     }
 
     // Scale to 1e9 electrons (simulation results are for 960e6 electrons)
-    hist_SignalEdep->Scale(1./0.96);
-    hist_BackgroundBkgdEdep->Scale(1./0.96);
-    hist_ElectronPositronBackgroundBkgdEdep->Scale(1./0.96);
-    hist_GammaBackgroundBkgdEdep->Scale(1./0.96);
+//    hist_SignalEdep->Scale(1./0.96);
+//    hist_BackgroundBkgdEdep->Scale(1./0.96);
+//    hist_ElectronPositronBackgroundBkgdEdep->Scale(1./0.96);
+//    hist_GammaBackgroundBkgdEdep->Scale(1./0.96);
 
+    gStyle->SetOptStat(0);
     // Styling
     hist_SignalEdep->SetLineColor(kRed);
     hist_SignalEdep->SetLineWidth(2);
-    hist_SignalEdep->SetFillColorAlpha(kRed, 0.4);
+    hist_SignalEdep->SetFillColorAlpha(kRed, 0.6);
 
     hist_BackgroundBkgdEdep->SetLineColor(kBlue);
     hist_BackgroundBkgdEdep->SetLineWidth(2);
-    hist_BackgroundBkgdEdep->SetFillColorAlpha(kBlue, 0.4);
+    hist_BackgroundBkgdEdep->SetFillColorAlpha(kBlue, 0.6);
 
     hist_ElectronPositronBackgroundBkgdEdep->SetLineColor(kGreen);
     hist_ElectronPositronBackgroundBkgdEdep->SetLineStyle(kDashed);
     hist_ElectronPositronBackgroundBkgdEdep->SetLineWidth(2);
-    hist_ElectronPositronBackgroundBkgdEdep->SetFillColorAlpha(kGreen, 0.4);
+    hist_ElectronPositronBackgroundBkgdEdep->SetFillColorAlpha(kGreen, 0.2);
 
     hist_GammaBackgroundBkgdEdep->SetLineColor(kOrange);
     hist_GammaBackgroundBkgdEdep->SetLineStyle(kDashed);
     hist_GammaBackgroundBkgdEdep->SetLineWidth(2);
-    hist_GammaBackgroundBkgdEdep->SetFillColorAlpha(kOrange, 0.4);
+    hist_GammaBackgroundBkgdEdep->SetFillColorAlpha(kOrange, 0.2);
 
     // Drawing
     auto c1 = new TCanvas("c1", "c1", 1200, 1200);
@@ -79,11 +86,17 @@ void SNRatio() {
     hist_SignalEdep->GetXaxis()->CenterTitle();
     hist_SignalEdep->GetYaxis()->CenterTitle();
     hist_SignalEdep->GetYaxis()->SetMaxDigits(3);
-    hist_SignalEdep->GetYaxis()->SetRangeUser(1, 1e7);
+    hist_SignalEdep->GetYaxis()->SetRangeUser(1, 1e4);
     hist_BackgroundBkgdEdep->Draw("SAME HIST");
     hist_ElectronPositronBackgroundBkgdEdep->Draw("SAME HIST");
     hist_GammaBackgroundBkgdEdep->Draw("SAME HIST");
     c1->SaveAs("/home/dphan/Documents/GitHub/SEET-Geant4/ana/SNRatio.pdf");
+
+    std::cout << "Signal Energy Deposit: " << hist_SignalEdep->Integral() << std::endl;
+    std::cout << "Total Background Energy Deposit: " << hist_BackgroundBkgdEdep->Integral() << std::endl;
+    std::cout << "Electron/Positron Background Energy Deposit: " << hist_ElectronPositronBackgroundBkgdEdep->Integral() << std::endl;
+    std::cout << "Gamma Background Energy Deposit: " << hist_GammaBackgroundBkgdEdep->Integral() << std::endl;
+    std::cout << "Background Contribution: " << 100. * hist_BackgroundBkgdEdep->Integral() / (hist_SignalEdep->Integral() + hist_BackgroundBkgdEdep->Integral()) << "%." << std::endl;
 
     auto outfile = new TFile("SNRatioOut.root", "RECREATE");
     outfile->cd();
