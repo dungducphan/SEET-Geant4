@@ -13,7 +13,8 @@
 
 // Change these:
 std::string anaDirPath = "/home/dphan/Documents/GitHub/SEET-Geant4/ana";
-std::string dataFile = "Ana";
+std::string dataFile = "Ana_1cm_1E8";
+std::string thickness = "W1cm";
 
 void SEETAna() {
     gStyle->SetOptStat(0);
@@ -55,6 +56,11 @@ void SEETAna() {
         }
     }
 
+    // FIXME: check if need to scale here
+    // Scale to 10 here to compare to the case of W5cm (1e9 electrons)
+    hGammaSpectrum->Scale(10);
+    hElectronSpectrum->Scale(10);
+    hPositronSpectrum->Scale(10);
     double NGamma = hGammaSpectrum->Integral();
     double NElectron = hElectronSpectrum->Integral();
     double NPositron = hPositronSpectrum->Integral();
@@ -71,28 +77,28 @@ void SEETAna() {
     hGammaSpectrum->SetLineColor(kGreen + 1);
 
     auto canvas = new TCanvas("c", "c", 1200, 1200);
-    hGammaSpectrum->Draw();
+    hGammaSpectrum->Draw("HIST");
     hGammaSpectrum->GetXaxis()->CenterTitle();
     hGammaSpectrum->GetYaxis()->CenterTitle();
     hGammaSpectrum->GetYaxis()->SetMaxDigits(3);
-    hElectronSpectrum->Draw("SAME");
+    hElectronSpectrum->Draw("SAME HIST");
     hPositronSpectrum->Draw("SAME HIST");
 
-    auto leg = new TLegend(0.55, 0.65, 0.85, 0.85);
+    auto leg = new TLegend(0.25, 0.65, 0.55, 0.85);
     leg->SetBorderSize(0);
     leg->AddEntry(hElectronSpectrum, Form("Electron (%g)", NElectron), "f");
     leg->AddEntry(hPositronSpectrum, Form("20 #times Positron (%g)", NPositron), "f");
     leg->AddEntry(hGammaSpectrum, Form("Gamma (%g)", NGamma), "f");
     leg->Draw();
 
-    canvas->SaveAs(Form("%s/All/SEETAna-Spectra.pdf", anaDirPath.c_str()));
+    canvas->SaveAs(Form("%s/%s/All/SEETAna-Spectra.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     auto canvas2 = new TCanvas("c2", "c2", 1200, 1200);
     canvas2->SetMargin(0.15, 0.15, 0.15, 0.15);
     hElectronSpectrumVersusPosition->Draw("COLZ");
     hElectronSpectrumVersusPosition->GetXaxis()->CenterTitle();
     hElectronSpectrumVersusPosition->GetYaxis()->CenterTitle();
-    canvas2->SaveAs(Form("%s/All/SEETAna-SpectraVersusPosition.pdf", anaDirPath.c_str()));
+    canvas2->SaveAs(Form("%s/%s/All/SEETAna-SpectraVersusPosition.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     delete canvas;
     delete canvas2;
@@ -142,11 +148,14 @@ void SEETAna_Log() {
         }
     }
 
+    // FIXME: check the normalizations
+    hGammaSpectrum->Scale(10);
+    hElectronSpectrum->Scale(10);
+    hPositronSpectrum->Scale(10);
     double NGamma = hGammaSpectrum->Integral();
     double NElectron = hElectronSpectrum->Integral();
     double NPositron = hPositronSpectrum->Integral();
 
-//    hPositronSpectrum->Scale(20);
     hElectronSpectrum->SetFillColorAlpha(kRed, 0.1);
     hPositronSpectrum->SetFillColorAlpha(kBlue, 0.1);
     hGammaSpectrum->SetFillColorAlpha(kGreen, 0.1);
@@ -159,21 +168,21 @@ void SEETAna_Log() {
 
     auto canvas = new TCanvas("c", "c", 1200, 1200);
     canvas->SetLogy();
-    hGammaSpectrum->Draw();
+    hGammaSpectrum->Draw("HIST");
     hGammaSpectrum->GetXaxis()->CenterTitle();
     hGammaSpectrum->GetYaxis()->CenterTitle();
     hGammaSpectrum->GetYaxis()->SetMaxDigits(3);
-    hGammaSpectrum->GetYaxis()->SetRangeUser(1, 1e6);
-    hElectronSpectrum->Draw("SAME");
+    hGammaSpectrum->GetYaxis()->SetRangeUser(1, 1e7);
+    hElectronSpectrum->Draw("SAME HIST");
     hPositronSpectrum->Draw("SAME HIST");
 
-    auto leg = new TLegend(0.25, 0.65, 0.55, 0.85);
+    auto leg = new TLegend(0.2, 0.65, 0.5, 0.85);
     leg->SetBorderSize(0);
     leg->AddEntry(hElectronSpectrum, Form("Electron (%g)", NElectron), "f");
     leg->AddEntry(hPositronSpectrum, Form("Positron (%g)", NPositron), "f");
     leg->AddEntry(hGammaSpectrum, Form("Gamma (%g)", NGamma), "f");
     leg->Draw();
-    canvas->SaveAs(Form("%s/All/SEETAna-Spectra-Log.pdf", anaDirPath.c_str()));
+    canvas->SaveAs(Form("%s/%s/All/SEETAna-Spectra-Log.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     delete canvas;
     delete hElectronSpectrum;
