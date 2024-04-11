@@ -28,15 +28,12 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
     if (logicalVolNameAtVertex != "logic_PhotoDiode") {
         if (track->GetTrackID() == 1) {
             evtAction->AddSignalTracks(track->GetTrackID());
-            std::cout << "Signal track ID: " << track->GetTrackID() << std::endl;
         } else {
             evtAction->AddBkgdTracks(track->GetTrackID());
             if (track->GetParticleDefinition() == G4Gamma::Definition()) {
                 evtAction->AddGammaBkgdTracks(track->GetTrackID());
-                std::cout << "Gamma track ID: " << track->GetTrackID() << std::endl;
             } else {
                 evtAction->AddElectronPositronBkgdTracks(track->GetTrackID());
-                std::cout << "Electron/Positron track ID: " << track->GetTrackID() << std::endl;
             }
         }
     }

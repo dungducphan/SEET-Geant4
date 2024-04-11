@@ -26,8 +26,7 @@ void eventAction::EndOfEventAction(const G4Event *evt) {
     man->FillNtupleIColumn(0, eventID);
     man->FillNtupleDColumn(1, fSignalEnergyDeposit);
     man->FillNtupleDColumn(2, fBackgroundEnergyDeposit);
-    man->FillNtupleDColumn(2, fBackgroundEnergyDeposit);
-    man->FillNtupleDColumn(2, fBackgroundEnergyDeposit);
-
+    man->FillNtupleDColumn(3, fElectronPositronBackgroundEnergyDeposit);
+    man->FillNtupleDColumn(4, fGammaBackgroundEnergyDeposit);
     man->AddNtupleRow(0);
 }
