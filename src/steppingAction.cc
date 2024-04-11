@@ -30,10 +30,11 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
             evtAction->AddSignalTracks(track->GetTrackID());
         } else {
             evtAction->AddBkgdTracks(track->GetTrackID());
-            if (track->GetParticleDefinition() == G4Electron::Definition() || track->GetParticleDefinition() == G4Positron::Definition()) {
-                evtAction->AddElectronPositronBkgdTracks(track->GetTrackID());
-            } else if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+            if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+                // FIXME: Performance issue: many steps would just add the same track ID to the same vector
                 evtAction->AddGammaBkgdTracks(track->GetTrackID());
+            } else {
+                evtAction->AddElectronPositronBkgdTracks(track->GetTrackID());
             }
         }
     }
@@ -48,10 +49,10 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
             evtAction->AddSignalTracks(secondary->GetTrackID());
         } else {
             evtAction->AddBkgdTracks(secondary->GetTrackID());
-            if (track->GetParticleDefinition() == G4Electron::Definition() || track->GetParticleDefinition() == G4Positron::Definition()) {
-                evtAction->AddElectronPositronBkgdTracks(secondary->GetTrackID());
-            } else if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+            if (track->GetParticleDefinition() == G4Gamma::Definition()) {
                 evtAction->AddGammaBkgdTracks(secondary->GetTrackID());
+            } else {
+                evtAction->AddElectronPositronBkgdTracks(secondary->GetTrackID());
             }
         }
     }
