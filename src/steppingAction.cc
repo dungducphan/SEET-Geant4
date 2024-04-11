@@ -23,18 +23,20 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
     if (track->GetParticleDefinition() != G4Electron::Definition() && track->GetParticleDefinition() != G4Positron::Definition() && track->GetParticleDefinition() != G4Gamma::Definition()) return;
     auto energyDeposition = step->GetTotalEnergyDeposit() / keV;
 
-    // Initialize the primary vectors
+    // Initialize the "primary" sets
     auto logicalVolNameAtVertex = track->GetLogicalVolumeAtVertex()->GetName();
     if (logicalVolNameAtVertex != "logic_PhotoDiode") {
         if (track->GetTrackID() == 1) {
             evtAction->AddSignalTracks(track->GetTrackID());
+            std::cout << "Signal track ID: " << track->GetTrackID() << std::endl;
         } else {
             evtAction->AddBkgdTracks(track->GetTrackID());
             if (track->GetParticleDefinition() == G4Gamma::Definition()) {
-                // FIXME: Performance issue: many steps would just add the same track ID to the same vector
                 evtAction->AddGammaBkgdTracks(track->GetTrackID());
+                std::cout << "Gamma track ID: " << track->GetTrackID() << std::endl;
             } else {
                 evtAction->AddElectronPositronBkgdTracks(track->GetTrackID());
+                std::cout << "Electron/Positron track ID: " << track->GetTrackID() << std::endl;
             }
         }
     }
@@ -49,7 +51,7 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
             evtAction->AddSignalTracks(secondary->GetTrackID());
         } else {
             evtAction->AddBkgdTracks(secondary->GetTrackID());
-            if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+            if (evtAction->IsGammaBkgdTrack(track->GetTrackID())) {
                 evtAction->AddGammaBkgdTracks(secondary->GetTrackID());
             } else {
                 evtAction->AddElectronPositronBkgdTracks(secondary->GetTrackID());

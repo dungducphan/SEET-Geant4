@@ -12,7 +12,7 @@
 #endif
 
 void SNRatio() {
-    auto infile = new TFile("/home/dphan/Documents/GitHub/SEET-Geant4/ana/SNRatio_960E6_1cm.root", "READ");
+    auto infile = new TFile("/home/dphan/Documents/GitHub/SEET-Geant4/ana/SNRatio_96E5_1cm.root", "READ");
     auto tree = (TTree *) infile->Get("SNRatio");
     auto NEntries = tree->GetEntries();
 
@@ -83,7 +83,7 @@ void SNRatio() {
     hist_BackgroundBkgdEdep->Draw("SAME HIST");
     hist_ElectronPositronBackgroundBkgdEdep->Draw("SAME HIST");
     hist_GammaBackgroundBkgdEdep->Draw("SAME HIST");
-    c1->SaveAs("SNRatio.pdf");
+    c1->SaveAs("/home/dphan/Documents/GitHub/SEET-Geant4/ana/SNRatio.pdf");
 
     auto outfile = new TFile("SNRatioOut.root", "RECREATE");
     outfile->cd();
