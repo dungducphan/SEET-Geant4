@@ -32,10 +32,6 @@ G4VPhysicalVolume *detcon::Construct() {
     auto logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicWorld");
     G4VPhysicalVolume *physWorld = new G4PVPlacement(nullptr, G4ThreeVector(), logicWorld, "physWorld", nullptr, false, 0, checkOverlaps);
 
-    // Pinhole Block
-//    auto mesh_PinholeBlock = CADMesh::TessellatedMesh::FromSTL(Form("%s/SEET-CAD-PinholeBlock.stl", stlPath));
-//    G4VSolid *solid_PinholeBlock = mesh_PinholeBlock->GetSolid();
-
     auto a = new G4RotationMatrix();
     a->rotateX(90 * deg);
 
@@ -50,7 +46,7 @@ G4VPhysicalVolume *detcon::Construct() {
 
     // Virtual Detector Back
     auto solid_VDBack = new G4Tubs("solid_VDBack", 0, 0.508 * mm, 0.1 * mm, 0, 360 * deg);
-    logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDBack");
+    logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Si"), "logic_VDBack");
     G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(a, G4ThreeVector(0, -11 * mm, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
     auto va_VDBack = new G4VisAttributes();
     va_VDBack->SetVisibility();
@@ -62,7 +58,7 @@ G4VPhysicalVolume *detcon::Construct() {
 }
 
 void detcon::ConstructSDandField() {
-    auto aSD = new SEET_SD("SEET-SD");
-    G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
-    SetSensitiveDetector(logic_VDBack, aSD);
+//    auto aSD = new SEET_SD("SEET-SD");
+//    G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
+//    SetSensitiveDetector(logic_VDBack, aSD);
 }
