@@ -5,9 +5,9 @@ runAction::runAction() : G4UserRunAction() {
     man->CreateNtuple("SNRatio", "SNRatio");
     man->CreateNtupleIColumn("EventID");
     man->CreateNtupleDColumn("SignalEdep");
-    man->CreateNtupleDColumn("ElectronBkgdEdep");
-    man->CreateNtupleDColumn("PositronBkgdEdep");
-    man->CreateNtupleDColumn("GammaBkgdEdep");
+    man->CreateNtupleDColumn("BackgroundBkgdEdep");
+    man->CreateNtupleDColumn("ElectronPositronBackgroundBkgdEdep");
+    man->CreateNtupleDColumn("GammaBackgroundBkgdEdep");
     man->FinishNtuple(0);
 }
 

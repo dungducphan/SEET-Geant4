@@ -19,7 +19,7 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
     auto volume = step->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
     auto evtAction = (eventAction*) G4EventManager::GetEventManager()->GetUserEventAction();
 
-    if (volume->GetName() != "phys_VDBack") return;
+    if (volume->GetName() != "phys_PhotoDiode") return;
     if (track->GetParticleDefinition() != G4Electron::Definition() && track->GetParticleDefinition() != G4Positron::Definition() && track->GetParticleDefinition() != G4Gamma::Definition()) return;
     auto energyDeposition = step->GetTotalEnergyDeposit() / keV;
 
@@ -30,6 +30,11 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
             evtAction->AddSignalTracks(track->GetTrackID());
         } else {
             evtAction->AddBkgdTracks(track->GetTrackID());
+            if (track->GetParticleDefinition() == G4Electron::Definition() || track->GetParticleDefinition() == G4Positron::Definition()) {
+                evtAction->AddElectronPositronBkgdTracks(track->GetTrackID());
+            } else if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+                evtAction->AddGammaBkgdTracks(track->GetTrackID());
+            }
         }
     }
 
@@ -43,6 +48,11 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
             evtAction->AddSignalTracks(secondary->GetTrackID());
         } else {
             evtAction->AddBkgdTracks(secondary->GetTrackID());
+            if (track->GetParticleDefinition() == G4Electron::Definition() || track->GetParticleDefinition() == G4Positron::Definition()) {
+                evtAction->AddElectronPositronBkgdTracks(secondary->GetTrackID());
+            } else if (track->GetParticleDefinition() == G4Gamma::Definition()) {
+                evtAction->AddGammaBkgdTracks(secondary->GetTrackID());
+            }
         }
     }
 
@@ -51,5 +61,10 @@ void steppingAction::UserSteppingAction(const G4Step *step) {
         evtAction->AddSignalEnergyDeposit(energyDeposition);
     } else {
         evtAction->AddBackgroundEnergyDeposit(energyDeposition);
+        if (evtAction->IsGammaBkgdTrack(track->GetTrackID())) {
+            evtAction->AddGammaBackgroundEnergyDeposit(energyDeposition);
+        } else {
+            evtAction->AddElectronPositronBackgroundEnergyDeposit(energyDeposition);
+        }
     }
 }

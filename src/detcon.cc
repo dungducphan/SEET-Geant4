@@ -35,9 +35,9 @@ G4VPhysicalVolume *detcon::Construct() {
     auto a = new G4RotationMatrix();
     a->rotateX(90 * deg);
 
-    auto solid_PinholeBlock = new G4Tubs("solid_PinholeBlock", 50 * um, 30 * mm, 50 * mm, 0, 360 * deg);
+    auto solid_PinholeBlock = new G4Tubs("solid_PinholeBlock", 50 * um, 30 * mm, 10 * mm, 0, 360 * deg);
     logic_PinholeBlock = new G4LogicalVolume(solid_PinholeBlock, nist->FindOrBuildMaterial("G4_W"), "logic_PinholeBlock");
-    G4VPhysicalVolume *phys_PinholeBlock = new G4PVPlacement(a, G4ThreeVector(0, 40, 0), logic_PinholeBlock, "phys_PinholeBlock", logicWorld, false, 0, checkOverlaps);
+    G4VPhysicalVolume *phys_PinholeBlock = new G4PVPlacement(a, G4ThreeVector(0, 0, 0), logic_PinholeBlock, "phys_PinholeBlock", logicWorld, false, 0, checkOverlaps);
     auto va_PinholeBlock = new G4VisAttributes();
     va_PinholeBlock->SetVisibility();
     va_PinholeBlock->SetForceSolid();
