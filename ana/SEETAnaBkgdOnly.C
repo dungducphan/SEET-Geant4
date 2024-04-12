@@ -13,8 +13,8 @@
 
 // Change these:
 std::string anaDirPath = "/home/dphan/Documents/GitHub/SEET-Geant4/ana";
-std::string dataFile = "Ana_1cm_1E8";
-std::string thickness = "W1cm";
+std::string dataFile = "Ana_1cm_48E6";
+std::string thickness = "Special";
 
 void SEETAna() {
     gStyle->SetOptStat(0);
@@ -27,6 +27,7 @@ void SEETAna() {
     // Prepare the histograms
     auto hElectronSpectrum          = new TH1D("hElectronSpectrum",       ";E (MeV);dN/dE (/0.5 MeV)",  100, 0, 50);
     auto hPositronSpectrum          = new TH1D("hPositronSpectrum",       ";E (Mev);dN/dE (/0.5 MeV)",  100, 0, 50);
+    auto hLowEGammaSpectrum         = new TH1D("hLowEGammaSpectrum",      ";E (MeV);dN/dE",             100, 0, 1);
     auto hGammaSpectrum             = new TH1D("hGammaSpectrum",          ";E (MeV);dN/dE (/0.5 MeV)",  100, 0, 50);
     auto hGammaSpectrumWavelength   = new TH1D("hGammaSpectrumWavelength",";#lambda (nm); dN/d#lambda (/0.1 nm)", 200, 0, 20);
 
@@ -57,6 +58,7 @@ void SEETAna() {
             hPositronSpectrum->Fill(E);
             hPositronSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
         } else if (PDGID == 22) {
+            if (E <= 1) hLowEGammaSpectrum->Fill(E);
             hGammaSpectrum->Fill(E);
             hGammaSpectrumWavelength->Fill(1239.842 / (E * 1E6));
             hGammaSpectrumVersusPosition->Fill(E, TMath::Sqrt(x * x + z * z));
@@ -100,16 +102,17 @@ void SEETAna() {
 
     canvas->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-Spectra.pdf", anaDirPath.c_str(), thickness.c_str()));
 
-    hGammaSpectrumWavelength->SetFillColorAlpha(kGreen, 0.1);
-    hGammaSpectrumWavelength->SetLineWidth(2);
-    auto spectrumWavelength = new TCanvas("c1", "c1", 1200, 1200);
-    spectrumWavelength->SetLogy();
-    hGammaSpectrumWavelength->Draw();
-    hGammaSpectrumWavelength->GetXaxis()->CenterTitle();
-    hGammaSpectrumWavelength->GetYaxis()->CenterTitle();
-    hGammaSpectrumWavelength->GetYaxis()->SetRangeUser(1, 1e5);
-    hGammaSpectrumWavelength->GetYaxis()->SetMaxDigits(3);
-    spectrumWavelength->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-SpectraWavelength.pdf", anaDirPath.c_str(), thickness.c_str()));
+    hLowEGammaSpectrum->SetLineColor(kGreen);
+    hLowEGammaSpectrum->SetFillColorAlpha(kGreen, 0.2);
+    hLowEGammaSpectrum->SetLineWidth(2);
+    auto LowEGammaSpectrumCanvas = new TCanvas("c1", "c1", 1200, 1200);
+    LowEGammaSpectrumCanvas->SetLogy();
+    hLowEGammaSpectrum->Draw();
+    hLowEGammaSpectrum->GetXaxis()->CenterTitle();
+    hLowEGammaSpectrum->GetYaxis()->CenterTitle();
+//    hLowEGammaSpectrum->GetYaxis()->SetRangeUser(1, 1e5);
+    hLowEGammaSpectrum->GetYaxis()->SetMaxDigits(3);
+    LowEGammaSpectrumCanvas->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-LowEGamma.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     auto canvas2 = new TCanvas("c2", "c2", 1200, 1200);
     canvas2->SetMargin(0.15, 0.15, 0.15, 0.15);
@@ -133,7 +136,7 @@ void SEETAna() {
     canvas4->SaveAs(Form("%s/%s/BackgroundOnly/SEETAna-GammaSpectraVersusPosition.pdf", anaDirPath.c_str(), thickness.c_str()));
 
     delete canvas;
-    delete spectrumWavelength;
+    delete LowEGammaSpectrumCanvas;
     delete canvas2;
     delete hElectronSpectrum;
     delete hPositronSpectrum;

@@ -10,6 +10,7 @@
 #endif
 
 #include "FTFP_BERT.hh"
+#include "G4EmStandardPhysics_option4.hh"
 #include "G4SteppingVerbose.hh"
 #include "G4UImanager.hh"
 #include "G4VisExecutive.hh"
@@ -32,7 +33,9 @@ int main(int argc, char **argv) {
 #endif
 
     runManager->SetUserInitialization(new detcon());
-    runManager->SetUserInitialization(new FTFP_BERT());
+    auto physics = new FTFP_BERT();
+    physics->RegisterPhysics(new G4EmStandardPhysics_option4());
+    runManager->SetUserInitialization(physics);
     runManager->SetUserInitialization(new actioninit());
 
     G4VisManager *visManager = new G4VisExecutive;
