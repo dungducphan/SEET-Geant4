@@ -9,7 +9,7 @@
 #include "G4RunManager.hh"
 #endif
 
-#include "FTFP_BERT.hh"
+#include "QGSP_BIC_HP.hh"
 #include "G4EmStandardPhysics_option4.hh"
 #include "G4SteppingVerbose.hh"
 #include "G4UImanager.hh"
@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 #endif
 
     runManager->SetUserInitialization(new detcon());
-    auto physics = new FTFP_BERT();
+    auto physics = new G4VModularPhysicsList();
     physics->RegisterPhysics(new G4EmStandardPhysics_option4());
     runManager->SetUserInitialization(physics);
     runManager->SetUserInitialization(new actioninit());

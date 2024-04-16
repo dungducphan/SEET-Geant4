@@ -13,6 +13,7 @@ runAction::runAction() : G4UserRunAction() {
     man->CreateNtupleDColumn("y");
     man->CreateNtupleDColumn("z");
     man->CreateNtupleDColumn("E");
+    man->CreateNtupleDColumn("Edep");
     man->FinishNtuple(0);
 }
 

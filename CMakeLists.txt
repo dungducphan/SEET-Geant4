@@ -17,7 +17,7 @@ include(${ROOT_USE_FILE})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/inc/*.hh)
 
-file(GLOB MACROS "*.mac")
+file(GLOB MACROS "*.mac" "*.sh")
 
 file(COPY ${MACROS} DESTINATION ${PROJECT_BINARY_DIR})
 file(COPY ${EXT_DATA} DESTINATION ${PROJECT_BINARY_DIR})
@@ -28,3 +28,4 @@ target_link_libraries(SEET ${Geant4_LIBRARIES})
 target_link_libraries(SEET ${ROOT_LIBRARIES})
 
 add_subdirectory(ana)
+add_subdirectory(transAna)

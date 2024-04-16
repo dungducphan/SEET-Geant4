@@ -23,14 +23,11 @@ G4bool SEET_SD::ProcessHits(G4Step * aStep, G4TouchableHistory *) {
     // Get track ID
     G4int track_id = aStep->GetTrack()->GetTrackID();
 
-    // Kill if not an electron, positron, or gamma
-    if (particle != G4Electron::ElectronDefinition() && particle != G4Positron::PositronDefinition() && particle != G4Gamma::GammaDefinition()) {
-        aStep->GetTrack()->SetTrackStatus(fStopAndKill);
-        return false;
-    }
-
     // Get kinetic energy
     G4double E = aStep->GetPreStepPoint()->GetKineticEnergy() / MeV;
+
+    // Get Edep
+    G4double Edep = aStep->GetTotalEnergyDeposit() / MeV;
 
     // Get position
     G4ThreeVector pos = aStep->GetPreStepPoint()->GetPosition();
@@ -58,9 +55,8 @@ G4bool SEET_SD::ProcessHits(G4Step * aStep, G4TouchableHistory *) {
     man->FillNtupleDColumn(7, y);
     man->FillNtupleDColumn(8, z);
     man->FillNtupleDColumn(9, E);
+    man->FillNtupleDColumn(10, Edep);
     man->AddNtupleRow(0);
-
-    aStep->GetTrack()->SetTrackStatus(fStopAndKill);
 
     return true;
 }
