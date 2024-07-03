@@ -16,8 +16,10 @@ generator::generator() : G4VUserPrimaryGeneratorAction(), fGeneralParticleSource
     sps->GetPosDist()->ConfineSourceToVolume("NULL");
 
     sps->GetEneDist()->SetEnergyDisType("Gauss"); // Mono, Lin, Pow, Exp, Gaus, Brem, BBody, Cdg (cosmic diffuse gamma), User, Arb, Epn (energy per nucleon)
-    sps->GetEneDist()->SetMonoEnergy(40 * MeV);
+    sps->GetEneDist()->SetMonoEnergy(90 * MeV);
     sps->GetEneDist()->SetBeamSigmaInE(4 * MeV);
+
+    fRandom = new TRandom3();
 }
 
 generator::~generator() {
@@ -34,15 +36,14 @@ G4ThreeVector generator::RandomizedPosition() {
     double r = static_cast<double>(rand()) / RAND_MAX;
     double theta = static_cast<double>(rand()) / RAND_MAX;
     theta = theta * TMath::TwoPi();
-    G4double x = r * TMath::Sin(theta) * 10. * um;
-    G4double z = r * TMath::Cos(theta) * 10. * um;
+    G4double x = r * TMath::Sin(theta) * 0. * um;
+    G4double z = r * TMath::Cos(theta) * 0. * um;
 
-    return {x, 145 * cm, z};
+    return {x, 148 * cm, z};
 }
 
 G4ThreeVector generator::RandomizedDirection() {
-    double rdm1 = static_cast<double>(rand()) / RAND_MAX;
-    rdm1 = rdm1 * 10.;
+    double rdm1 = fRandom->Gaus(0, 5);
     double y_mom = -1. * TMath::Cos(rdm1 * mrad);
     double tmp = TMath::Sin(rdm1 * mrad);
     double rdm2 = static_cast<double>(rand()) / RAND_MAX;

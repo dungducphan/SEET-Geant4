@@ -16,6 +16,7 @@
 #include <ctime>
 
 #include "TMath.h"
+#include "TRandom3.h"
 
 class generator : public G4VUserPrimaryGeneratorAction {
 public:
@@ -26,6 +27,7 @@ public:
 private:
     G4GeneralParticleSource *fGeneralParticleSource = nullptr;
 
-    static G4ThreeVector RandomizedPosition();
-    static G4ThreeVector RandomizedDirection();
+    G4ThreeVector RandomizedPosition();
+    G4ThreeVector RandomizedDirection();
+    TRandom3 *fRandom;
 };

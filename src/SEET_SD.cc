@@ -44,9 +44,6 @@ G4bool SEET_SD::ProcessHits(G4Step * aStep, G4TouchableHistory *) {
     G4double py = mom.y() / MeV;
     G4double pz = mom.z() / MeV;
 
-    G4double tof = aStep->GetPreStepPoint()->GetGlobalTime();
-    G4int det_id = aStep->GetPreStepPoint()->GetTouchable()->GetCopyNumber();
-
     G4AnalysisManager *man = G4AnalysisManager::Instance();
     man->FillNtupleIColumn(0, event_id);
     man->FillNtupleIColumn(1, track_id);
