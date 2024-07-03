@@ -6,13 +6,13 @@ runAction::runAction() : G4UserRunAction() {
     man->CreateNtupleIColumn("EventID");
     man->CreateNtupleIColumn("TrackID");
     man->CreateNtupleIColumn("PID");
-    man->CreateNtupleDColumn("pX");
-    man->CreateNtupleDColumn("pY");
-    man->CreateNtupleDColumn("pZ");
-    man->CreateNtupleDColumn("x");
-    man->CreateNtupleDColumn("y");
-    man->CreateNtupleDColumn("z");
-    man->CreateNtupleDColumn("E");
+    // man->CreateNtupleDColumn("pX");
+    // man->CreateNtupleDColumn("pY");
+    // man->CreateNtupleDColumn("pZ");
+    // man->CreateNtupleDColumn("x");
+    // man->CreateNtupleDColumn("y");
+    // man->CreateNtupleDColumn("z");
+    man->CreateNtupleDColumn("Edep");
     man->FinishNtuple(0);
 }
 

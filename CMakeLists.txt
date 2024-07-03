@@ -23,7 +23,8 @@ file(COPY ${MACROS} DESTINATION ${PROJECT_BINARY_DIR})
 file(COPY ${EXT_DATA} DESTINATION ${PROJECT_BINARY_DIR})
 
 include_directories(${PROJECT_SOURCE_DIR}/inc)
-add_executable(SEET sim.cc ${sources} ${headers})
+add_executable(SEET sim.cc ${sources} ${headers}
+        src/SEET_Edep_SD.cpp)
 target_link_libraries(SEET ${Geant4_LIBRARIES})
 target_link_libraries(SEET ${ROOT_LIBRARIES})
 

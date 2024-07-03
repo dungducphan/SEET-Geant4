@@ -1,5 +1,6 @@
 #include <detcon.hh>
 #include <SEET_SD.hh>
+#include <SEET_Edep_SD.h>
 
 #include <CADMesh.hh>
 
@@ -36,7 +37,7 @@ G4VPhysicalVolume *detcon::Construct() {
     auto a = new G4RotationMatrix();
     a->rotateX(90 * deg);
 
-    auto solid_PinholeBlock = new G4Tubs("solid_VDBack", 0 * mm, 12.7 * mm, 14 * mm, 0, 360 * deg);
+    auto solid_PinholeBlock = new G4Tubs("solid_VDBack", 50 * um, 12.7 * mm, 14 * mm, 0, 360 * deg);
     logic_PinholeBlock = new G4LogicalVolume(solid_PinholeBlock, nist->FindOrBuildMaterial("G4_W"), "logic_PinholeBlock");
     G4VPhysicalVolume *phys_PinholeBlock = new G4PVPlacement(a, G4ThreeVector(0, 0, 0), logic_PinholeBlock, "phys_PinholeBlock", logicWorld, false, 0, checkOverlaps);
     auto va_PinholeBlock = new G4VisAttributes();
@@ -46,7 +47,7 @@ G4VPhysicalVolume *detcon::Construct() {
     logic_PinholeBlock->SetVisAttributes(va_PinholeBlock);
 
     // Virtual Detector Back
-    auto solid_VDBack = new G4Tubs("solid_VDBack", 0, 0.5 * mm, 0.2 * mm, 0, 360 * deg);
+    auto solid_VDBack = new G4Tubs("solid_VDBack", 0, 0.9 * mm, 0.2 * mm, 0, 360 * deg);
     logic_VDBack = new G4LogicalVolume(solid_VDBack, nist->FindOrBuildMaterial("G4_Galactic"), "logic_VDBack");
     G4VPhysicalVolume *phys_VDBack = new G4PVPlacement(a, G4ThreeVector(0, -16 * mm, 0), logic_VDBack, "phys_VDBack", logicWorld, false, 0, checkOverlaps);
     auto va_VDBack = new G4VisAttributes();
@@ -59,7 +60,7 @@ G4VPhysicalVolume *detcon::Construct() {
 }
 
 void detcon::ConstructSDandField() {
-    auto aSD = new SEET_SD("SEET-SD");
+    auto aSD = new SEET_Edep_SD("SEET-EDEP-SD");
     G4SDManager::GetSDMpointer()->AddNewDetector(aSD);
     SetSensitiveDetector(logic_VDBack, aSD);
 }
