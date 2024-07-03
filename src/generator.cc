@@ -43,7 +43,7 @@ G4ThreeVector generator::RandomizedPosition() {
 }
 
 G4ThreeVector generator::RandomizedDirection() {
-    double rdm1 = fRandom->Gaus(0, 5);
+    double rdm1 = fRandom->Gaus(0, 2);
     double y_mom = -1. * TMath::Cos(rdm1 * mrad);
     double tmp = TMath::Sin(rdm1 * mrad);
     double rdm2 = static_cast<double>(rand()) / RAND_MAX;
