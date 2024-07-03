@@ -27,46 +27,38 @@ void EPonPDCounting() {
     auto NEntries = tree->GetEntries();
 
     // Prepare the histograms
-    auto hElectronSpectrum          = new TH1D("hElectronSpectrum",       ";E (MeV);dN/dE (/0.5 MeV)",  200, 0, 100);
-    auto hPositronSpectrum          = new TH1D("hPositronSpectrum",       ";E (Mev);dN/dE (/0.5 MeV)",  200, 0, 100);
+    // auto hEdepSecondaryElectron = new TH1D("hEdepSecondaryElectron", "",  200, 0, 100);
+    // auto hEdepPrimaryElectron   = new TH1D("hEdepPrimaryElectron", "",  200, 0, 100);
+    // auto hEdepElectron          = new TH1D("hEdepElectron", "",  200, 0, 100);
+    // auto hEdepGamma             = new TH1D("hEdepGamma", "",  200, 0, 100);
+
+    auto hEdepSignal          = new TH1D("hEdepSignal", "",  200, 0, 100);
+    auto hEdepBackground      = new TH1D("hEdepBackground", "",  200, 0, 100);
 
     // Loop over the tree here
     int EventID, TrackID, PDGID;
-    double x, y, z, px, py, pz, E;
+    double Edep;
     tree->SetBranchAddress("EventID", &EventID);
     tree->SetBranchAddress("TrackID", &TrackID);
     tree->SetBranchAddress("PID", &PDGID);
-    tree->SetBranchAddress("x", &x);
-    tree->SetBranchAddress("y", &y);
-    tree->SetBranchAddress("z", &z);
-    tree->SetBranchAddress("pX", &px);
-    tree->SetBranchAddress("pX", &py);
-    tree->SetBranchAddress("pZ", &pz);
-    tree->SetBranchAddress("E", &E);
-    int nElectrons = 0;
-    int nPositrons = 0;
+    tree->SetBranchAddress("Edep", &Edep);
     for (auto i = 0; i < NEntries; i++) {
         tree->GetEntry(i);
-        if (PDGID == 11) {
-            hElectronSpectrum->Fill(E);
-            nElectrons++;
-        } else if (PDGID == -11) {
-            hPositronSpectrum->Fill(E);
-            nPositrons++;
-        } else continue;
+        if (TrackID == 1) {
+            hEdepSignal->Fill(Edep * 1000000);
+            std::cout << "Primary electron: " << Edep << " MeV\n";
+        }
+        else hEdepBackground->Fill(Edep * 1000000);
     }
 
     auto c = new TCanvas("c", "c", 1200, 1200);
     c->SetLogy();
-    hElectronSpectrum->SetLineColor(kBlue);
-    hElectronSpectrum->Draw();
-    hPositronSpectrum->SetLineColor(kRed);
-    hPositronSpectrum->Draw("SAME");
-    c->BuildLegend();
-    c->SaveAs(Form("%s/EPonPDCounting.pdf", anaDirPath.c_str()));
-
-    std::cout << "EP: " << (nElectrons + nPositrons) << std::endl;
-    std::cout << "Charge: " << (nElectrons + nPositrons) * 1.6E-19 * 1E12 << " pC." << std::endl;
+    hEdepSignal->SetLineColor(kBlue);
+    hEdepSignal->Draw();
+    hEdepBackground->SetLineColor(kRed);
+    hEdepBackground->Draw("SAME");
+    // c->BuildLegend();
+    c->SaveAs(Form("%s/SignalVsBackground.pdf", anaDirPath.c_str()));
 }
 
 #ifndef __CINT__
